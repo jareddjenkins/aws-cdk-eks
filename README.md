@@ -20,3 +20,10 @@ ACCOUNT_ID=$(aws sts get-caller-identity|jq -r ".Account")
 cdk bootstrap aws://$ACCOUNT_ID/us-west-2
 cdk bootstrap aws://$ACCOUNT_ID/us-east-2
 ```
+
+aws cli version
+node version
+kubectl version
+
+
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 258001553249.dkr.ecr.us-west-2.amazonaws.com
