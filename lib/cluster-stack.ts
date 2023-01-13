@@ -5,6 +5,9 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { AutomateThingsChart } from './automate-app'
 import * as cdk8s from 'cdk8s';
 
+
+const dockerimage = "jareddjenkins/automate_things_app:v1"
+
 export class ClusterStack extends cdk.Stack {
   public readonly cluster: eks.Cluster;
 
@@ -34,7 +37,7 @@ export class ClusterStack extends cdk.Stack {
     const cdk8sApp = new cdk8s.App();
     cluster.addCdk8sChart(
       'nginx-app-service',
-      new AutomateThingsChart(cdk8sApp, 'nginx-app-chart', { image: 'jareddjenkins/automate_things_app:latest' })
+      new AutomateThingsChart(cdk8sApp, 'nginx-app-chart', { image: dockerimage })
     );
 
   }

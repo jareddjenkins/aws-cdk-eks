@@ -1,29 +1,43 @@
-# Manage your EKS Cluster with CDK
-This repository holds the skeleton code where you would start the journey to *[Manage your EKS Cluster with CDK](http://demogo-multiregion-eks.s3-website.ap-northeast-2.amazonaws.com/ko/)* Hands-on Lab.
+# Prerequesits
+Install node https://nodejs.org/en/download/
 
-Please clone this repository and start [the workshop](http://demogo-multiregion-eks.s3-website.ap-northeast-2.amazonaws.com/ko/) to play with the lab. :)
+Globally install cdk and cdk8s
+```
+npm install -g aws-cdk
+npm i cdk8s-cli -g
+```
 
+Setup AWS CLI https://aws.amazon.com/cli/
 
-## Related Repository
-* [Skeleton Repository](https://github.com/yjw113080/aws-cdk-eks-multi-region-skeleton): You would clone this repository and build up the code as going through the steps in the lab.
-* [Full-code Repository](https://github.com/yjw113080/aws-cdk-eks-multi-region): Once you complete the workshop, the code would look like this repository! You can also use this repository as a sample code to actually build CDK project for your own infrastructure and containers.
-* [CI/CD for CDK](https://github.com/yjw113080/aws-cdk-multi-region-cicd): Fabulous CDK team is working on providing CI/CD natively, in the meantime, you can check out simple way to do it with AWS CodePipeline and CodeBuild.
-* [Sample App for Multi-region Application Deployment](https://github.com/yjw113080/aws-cdk-multi-region-sample-app): In third lab of [this workshop](http://demogo-multiregion-eks.s3-website.ap-northeast-2.amazonaws.com/ko/), you will deploy your application in your developer's shoes. This repository holds the sample app to deploy. The sample simply says 'Hello World' with the information where it is hosted.
+In the cli, login to your aws account in us-west-2
+```
+aws configure
+```
 
-
-## My Steps
-
-Setup AWS CLI to login as a user with xxx permissions.
-
+Bootstrap CDK into your environment
 ``bash
 ACCOUNT_ID=$(aws sts get-caller-identity|jq -r ".Account")
 cdk bootstrap aws://$ACCOUNT_ID/us-west-2
-cdk bootstrap aws://$ACCOUNT_ID/us-east-2
+```
+Ensure you have kubectl is setup for your cli, if not download and install it from here. https://kubernetes.io/docs/tasks/tools/
+
+# Docker image
+Note: a docker image was created and published publicly, you can view the [docker image](appcontainer/)) here and modify it if desired. The image used in this repo is jareddjenkins/automate_things_app:v1
+
+# Create the cluster and deploy the application.
+```bash
+cdk deploy
+eval $(aws cloudformation describe-stacks \
+  --stack-name ClusterStack-us-west-2 \
+  --query "Stacks[0].Outputs[1].OutputValue" \
+  --output text)
+curl $(kubectl get services -o jsonpath='{.items[*].status.loadBalancer.ingress[0].hostname}')
 ```
 
-aws cli version
-node version
-kubectl version
+Alternatively run the follow command
+```bash
+sh single_click_test_deploy.sh
+```
 
 
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 258001553249.dkr.ecr.us-west-2.amazonaws.com
+
