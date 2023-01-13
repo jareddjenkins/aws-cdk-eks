@@ -1,18 +1,18 @@
-import * as cdk from '@aws-cdk/core';
-import * as iam from '@aws-cdk/aws-iam';
-import * as eks from '@aws-cdk/aws-eks';
-import * as ec2 from '@aws-cdk/aws-ec2';
-import { PhysicalName } from '@aws-cdk/core';
-import { EksProps } from './cluster-stack';
+import * as cdk from 'aws-cdk-lib';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as eks from 'aws-cdk-lib/aws-eks';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import { AutomateThingsChart } from './automate-app'
+import * as cdk8s from 'cdk8s';
 
 export class ClusterStack extends cdk.Stack {
   public readonly cluster: eks.Cluster;
 
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+  constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const primaryRegion = 'us-west-2';
-
+    
     const clusterAdmin = new iam.Role(this, 'AdminRole', {
       assumedBy: new iam.AccountRootPrincipal()
     });
@@ -29,18 +29,15 @@ export class ClusterStack extends cdk.Stack {
       spotPrice: cdk.Stack.of(this).region == primaryRegion ? '0.248' : '0.192'
     });
 
-    this.cluster = cluster;
+    this.cluster = cluster;   
+
+    const cdk8sApp = new cdk8s.App();
+    cluster.addCdk8sChart(
+      'nginx-app-service',
+      new AutomateThingsChart(cdk8sApp, 'nginx-app-chart', { image: 'jareddjenkins/automate_things_app:latest' })
+    );
+
   }
-}
-
-function createDeployRole(scope: cdk.Construct, id: string, cluster: eks.Cluster): iam.Role {
-  const role = new iam.Role(scope, id, {
-    roleName: PhysicalName.GENERATE_IF_NEEDED,
-    assumedBy: new iam.AccountRootPrincipal()
-  });
-  cluster.awsAuth.addMastersRole(role);
-
-  return role;
 }
 
 export interface EksProps extends cdk.StackProps {

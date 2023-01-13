@@ -2,7 +2,7 @@
   "name": "multi-cluster-ts",
   "version": "0.1.0",
   "bin": {
-    "multi-cluster-ts": "bin/multi-cluster-ts.js"
+    "multi-cluster-ts": "bin/automate-app-ts.js"
   },
   "scripts": {
     "build": "tsc",
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.22",
     "@types/js-yaml": "^3.12.5",
-    "@types/node": "10.17.5",
+    "@types/node": "^10.17.60",
     "aws-cdk": "^1.79.0",
     "jest": "^24.9.0",
     "ts-jest": "^24.1.0",
@@ -21,17 +21,12 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/assertions": "^1.188.0",
-    "@aws-cdk/aws-codebuild": "^1.79.0",
-    "@aws-cdk/aws-codecommit": "^1.79.0",
-    "@aws-cdk/aws-codepipeline": "^1.79.0",
-    "@aws-cdk/aws-codepipeline-actions": "^1.79.0",
-    "@aws-cdk/aws-ec2": "^1.79.0",
-    "@aws-cdk/aws-ecr": "^1.79.0",
-    "@aws-cdk/aws-eks": "^1.79.0",
-    "@aws-cdk/aws-iam": "^1.79.0",
-    "@aws-cdk/core": "^1.79.0",
     "@types/js-yaml": "^3.12.5",
+    "aws-cdk-lib": "^2.60.0",
+    "cdk-ecr-deployment": "^2.5.6",
+    "cdk8s": "^2.6.16",
+    "cdk8s-image": "^0.2.355",
+    "cdk8s-plus-24": "^2.3.21",
     "fs": "0.0.1-security",
     "js-yaml": "^3.14.1",
     "source-map-support": "^0.5.16"
